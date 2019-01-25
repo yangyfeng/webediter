@@ -6,10 +6,13 @@ npm install webediter --save
 ```
 ### 使用
 ```
+git地址： https://github.com/yangyufeng96/webediter
+```
+```
 // 导入
 import WebEditer from 'webediter'
 
-// 组件
+// 组件
 <WebEditer v-model="value" :width="1000" mode="json" :format="true" ></WebEditer>
 
 // 主题 chrome clouds cclipse gitHub tomorrow monokai terminal twilight dawn dreamweaver
