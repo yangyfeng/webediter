@@ -4,8 +4,6 @@
   </div>
 </template>
 <script>
-// 主题 chrome clouds cclipse gitHub tomorrow monokai terminal twilight dawn dreamweaver
-// 模式 css ejs  html jade java json javascript json
 import Ace from 'ace-builds'
 // 在 webpack 环境中使用必须要导入
 import 'ace-builds/webpack-resolver'
@@ -17,27 +15,21 @@ export default {
     },
     height: {
       type: Number,
-      default: 500
+      default: 600
     },
     value: {
-      type: [Object, Array, String],
-      default () {
-        return {}
-      }
+      type: [Object, Array, String, Number, Boolean],
+      default: ''
     },
     theme: {
       type: String,
-      default: 'monokai'
+      default: 'idle_fingers'
     },
     mode: {
       type: String,
-      default: 'json'
+      default: 'txt'
     },
     readonly: {
-      type: Boolean,
-      default: false
-    },
-    format: {
       type: Boolean,
       default: false
     }
@@ -74,20 +66,22 @@ export default {
       // 设置高亮
       editer.setHighlightActiveLine(true)
       // 字体大小
-      editer.setFontSize(14)
+      editer.setFontSize(12)
       // 自动换行,设置为off关闭
-      editer.setOption('wrap', 'free')
+      editer.setOption('wrap', true)
       // 设置值 arg1 字符类型 arg2 在哪里设置新值。 undefined或0是selectAll，-1是文档开头，1是结尾
-      // editer.setValue()
       editer.on('blur', (e) => {
+        if (this.readonly) return
         let newVal = editer.getValue()
         // 是不是json模式
         if (this.mode !== 'json') {
-          return this.$emit('input', newVal)
+          this.$emit('input', newVal)
+          this.$emit('onChange', newVal)
+          return false
         }
         if (this.isjson(newVal)) {
-          if (this.format) editer.setValue(this.formatJson(newVal))
           this.$emit('input', JSON.parse(newVal))
+          this.$emit('onChange', JSON.parse(newVal))
         }
       })
     },
@@ -101,61 +95,6 @@ export default {
         console.info('不是json')
       }
       return is
-    },
-    formatJson (json, options) {
-      let reg = null
-      let formatted = ''
-      let pad = 0
-      let PADDING = '  '
-      options = options || {}
-      options.spaceAfterColon = !options.spaceAfterColon || true
-      if (typeof json !== 'string') {
-        json = JSON.stringify(json)
-      } else {
-        json = JSON.parse(json)
-        json = JSON.stringify(json)
-      }
-      /* eslint-disable */
-      reg = /([\{\}])/g
-      json = json.replace(reg, '\r\n$1\r\n')
-      reg = /([\[\]])/g
-      json = json.replace(reg, '\r\n$1\r\n')
-      reg = /(\,)/g
-      json = json.replace(reg, '$1\r\n')
-      reg = /(\r\n\r\n)/g
-      json = json.replace(reg, '\r\n')
-      reg = /\r\n\,/g
-      json = json.replace(reg, ',')
-      if (!options.newlineAfterColonIfBeforeBraceOrBracket) {
-        reg = /\:\r\n\{/g
-        json = json.replace(reg, ':{')
-        reg = /\:\r\n\[/g
-        json = json.replace(reg, ':[')
-      }
-      if (options.spaceAfterColon) {
-        reg = /\:/g
-        json = json.replace(reg, ':')
-      }
-      json.split('\r\n').forEach((node, index) => {
-        let i = 0
-        let indent = 0
-        let padding = ''
-        if (node.match(/\{$/) || node.match(/\[$/)) {
-          indent = 1
-        } else if (node.match(/\}/) || node.match(/\]/)) {
-          if (pad !== 0) {
-            pad -= 1
-          }
-        } else {
-          indent = 0
-        }
-        for (i = 0; i < pad; i++) {
-          padding += PADDING
-        }
-        formatted += padding + node + '\r\n'
-        pad += indent
-      })
-      return formatted
     }
   }
 }
