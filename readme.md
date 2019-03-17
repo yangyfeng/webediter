@@ -16,7 +16,7 @@ import WebEditer from 'webediter'
 
 #### 组件
 ```
-<WebEditer v-model="value" :width="1000" mode="json" theme="GitHub" :readonly="true"></WebEditer>
+<WebEditer v-model="value" :config="config"></WebEditer>
 ```
 
 #### 主题 
@@ -225,29 +225,24 @@ var supportedModes = {
 #### 属性
 ```
 props: {
-  width: {
-    type: Number,
-    default: 400
-  },
-  height: {
-    type: Number,
-    default: 600
-  },
   value: {
-    type: [Object, Array, String, Number, Boolean],
+    type: [Object, Array, String],
     default: ''
   },
-  theme: {
-    type: String,
-    default: 'idle_fingers'
-  },
-  mode: {
-    type: String,
-    default: 'txt'
-  },
-  readonly: {
-    type: Boolean,
-    default: false
+  config: {
+    type: Object,
+    default () {
+      return {
+         width: '400px',
+        height: '500px',
+        lang: 'text',
+        theme: 'idle_fingers',
+        readOnly: false,
+        fullScreen: false,
+        autoCompletion: true,
+        tabSize: 2
+      }
+    }
   }
 }
 ```

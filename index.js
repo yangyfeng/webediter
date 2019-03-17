@@ -1,1 +1,1 @@
-export { default } from './lib/WebEditer.vue'
+export { default } from './Index.vue'

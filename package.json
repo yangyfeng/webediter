@@ -1,6 +1,6 @@
 {
   "name": "webediter",
-  "version": "2.0.1",
+  "version": "3.5.0",
   "description": "web editer vue component",
   "main": "index.js",
   "directories": {
@@ -20,6 +20,6 @@
   "author": "yangyufeng",
   "license": "ISC",
   "dependencies": {
-    "ace-builds": "^1.4.2"
+    "brace": "^0.11.0"
   }
 }
